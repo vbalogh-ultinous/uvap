@@ -24,19 +24,19 @@ echo ==[config.sh]============================
 #  --stream-uri rtsp://admin:Csirkepissok1@10.25.38.118:554/live1.sdp \
 #  --stream-uri rtsp://10.25.34.111:5010/regstream.avi \  
 #  --stream-uri /home/uvap/szeged2_split_left.avi
-/home/vbalogh/git/uvap/scripts/config.sh --stream-uri rtsp://freddie:5109/162_original.avi --demo-mode $DEMOMODE
+"${UVAP_HOME}"/scripts/config.sh --stream-uri rtsp://freddie:5109/162_original.avi --demo-mode $DEMOMODE
 
 echo ""
 echo ==[run_mgr.sh]===========================
 #/home/vbalogh/git/uvap/scripts/run_mgr.sh --license-data-file /home/vbalogh/git/uvap/mgr.txt --license-key-file /home/vbalogh/git/uvap/mgr.key -- --net=uvap --mount type=bind,readonly,src=/home/vbalogh/Documents/data/tracking/SzegedVideo/szeged2_split_left.avi,dst=/home/uvap/szeged2_split_left.avi
-/home/vbalogh/git/uvap/scripts/run_mgr.sh --license-data-file /home/vbalogh/git/uvap/mgr.txt --license-key-file /home/vbalogh/git/uvap/mgr.key -- --net=uvap
+"${UVAP_HOME}"/scripts/run_mgr.sh --license-data-file license/mgr.txt --license-key-file license/mgr.key -- --net=uvap
 
 echo -----------------------------------------
 docker container inspect --format '{{.State.Status}}' uvap_mgr
 
 echo ""
 echo ==[run_kafka_tracker.sh]===========================
-/home/vbalogh/git/uvap/scripts/run_kafka_tracker.sh -- --net=uvap
+"${UVAP_HOME}"/scripts/run_kafka_tracker.sh -- --net=uvap
 echo ----------------------------------------- 
 docker container inspect --format '{{.State.Status}}' uvap_kafka_tracker
 
