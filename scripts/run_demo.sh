@@ -15,7 +15,7 @@ set +a
 
 parse_all_arguments "${@}"
 parse_argument_with_value "demo_name" "the name of the demo to run - see the Quick Start Guide for details"
-parse_argument_with_value "demo_mode" "<base|skeleton|fve>"
+parse_argument_with_value "demo_mode" "<base|skeleton|fve|trackdir>"
 parse_argument_with_value "demo_applications_dir" "path of the demo applications scripts - default: ${demo_applications_dir}"
 parse_argument_with_value "config_file_name" "path of configuration file - default:"
 parse_argument_with_value "extra_demo_flags" "extra demo flags (e.g.: -d, -o, -v) - default: -o"
@@ -29,7 +29,7 @@ test_executable "tar"
 extra_demo_flags="${extra_demo_flags}" # parse_argument_with_value declares it - this just clears IDE warnings
 demo_name="${demo_name}" # parse_argument_with_value declares it - this just clears IDE warnings
 demo_mode="${demo_mode}" # parse_argument_with_value declares it - this just clears IDE warnings
-if ! [[ "${demo_mode}" =~ ^(base|skeleton|fve)$ ]]; then
+if ! [[ "${demo_mode}" =~ ^(base|skeleton|fve|trackdir)$ ]]; then
 	echo "ERROR: unrecognized demo mode: ${demo_mode}" >&2
 	echo "ERROR: override with --demo-mode" >&2
 	print_help

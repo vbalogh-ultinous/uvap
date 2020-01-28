@@ -15,7 +15,7 @@ web_player_port_number="9999"
 set +a
 
 parse_all_arguments "${@}"
-parse_argument_with_value "demo_mode" "<base|skeleton|fve>"
+parse_argument_with_value "demo_mode" "<base|skeleton|fve|trackdir>"
 parse_argument_with_multi_value "stream_uri" "file name / device name / RTSP URL of a stream to analyze - may be specified multiple times"
 parse_argument_with_value "demo_applications_dir" "directory path of demo applications scripts - default: ${demo_applications_dir}"
 parse_argument_with_value "templates_dir" "directory path of configuration templates - default: ${templates_dir}"
@@ -30,7 +30,8 @@ test_executable "docker"
 test_executable "tar"
 
 demo_mode="${demo_mode}" # parse_argument_with_value declares it - this just clears IDE warnings
-if ! [[ "${demo_mode}" =~ ^(base|skeleton|fve)$ ]]; then
+echo "${demo_mode}"
+if ! [[ "${demo_mode}" =~ ^(base|skeleton|fve|trackdir)$ ]]; then
 	echo "ERROR: unrecognized demo mode: ${demo_mode}" >&2
 	echo "ERROR: override with --demo-mode" >&2
 	print_help
@@ -125,6 +126,6 @@ tar -c -C "${demo_applications_dir}" -h -f - . | docker container cp --archive -
 
 docker container start --attach "${container_name}" > /dev/null
 
-if test "base" = "${demo_mode}"; then
+if [[ "base" == "${demo_mode}" || "trackdir" == "${demo_mode}" ]]; then
 	${current_directory}/generate_stream_configurator_ui.sh "--image-name" "${configurator_image_name}"
 fi
