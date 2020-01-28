@@ -1,22 +1,22 @@
 #!/bin/sh
 DEMOMODE=${1-"base"}
 echo $DEMOMODE
-docker rm -f kafka zookeeper uvap_mgr uvap_kafka_tracker uvap_demo_applications uvap_web_player
+docker rm -f zookeeper uvap_mgr uvap_kafka_tracker uvap_demo_applications uvap_web_player
 echo ""
-echo ==[kafka, zookeeper]====================
+#echo ==[kafka, zookeeper]====================
 docker network create uvap
-docker run --net=uvap -d --name=zookeeper -e ZOOKEEPER_CLIENT_PORT=2181 confluentinc/cp-zookeeper:4.1.0
+#docker run --net=uvap -d --name=zookeeper -e ZOOKEEPER_CLIENT_PORT=2181 confluentinc/cp-zookeeper:4.1.0
  
-docker run --net=uvap -d -p 9092:9092 --name=kafka \
-   -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
-   -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 \
-   -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
-   -e KAFKA_MESSAGE_MAX_BYTES=10485760 \
-   -e ZOOKEEPER_CLIENT_PORT=2181 confluentinc/cp-kafka:4.1.0
+#docker run --net=uvap -d -p 9092:9092 --name=kafka \
+#   -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
+#   -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 \
+#   -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+#   -e KAFKA_MESSAGE_MAX_BYTES=10485760 \
+#   -e ZOOKEEPER_CLIENT_PORT=2181 confluentinc/cp-kafka:4.1.0
 
-echo -----------------------------------------
-echo docker container inspect: kafka, zookeeper
-docker container inspect --format '{{.State.Status}}' kafka zookeeper
+#echo -----------------------------------------
+#echo docker container inspect: zookeeper # kafka
+#docker container inspect --format '{{.State.Status}}' zookeeper # kafka
   
 echo ""
 echo ==[config.sh]============================
@@ -44,7 +44,7 @@ docker container inspect --format '{{.State.Status}}' uvap_kafka_tracker
 
 echo -----------------------------------------
 echo created topics:
-docker exec -it kafka /bin/bash -c 'kafka-topics --list --zookeeper zookeeper:2181'
+kafka-topics --list --zookeeper localhost
 
 
 echo ""
@@ -68,7 +68,7 @@ echo -----------------------------------------
 docker container inspect --format '{{.State.Status}}' uvap_web_player
 echo -----------------------------------------
 echo created topics:
-docker exec -it kafka /bin/bash -c 'kafka-topics --list --zookeeper zookeeper:2181'
+kafka-topics --list --zookeeper localhost
 
 echo ""
 echo ==[Setting retention time]===========================
@@ -79,9 +79,9 @@ echo =========================================
 echo ""
 echo ""
 echo ""
-echo http://localhost:9999#base.cam.0.tracker.Image.jpg
+echo http://localhost:9999$DEMOMODE.cam.0.tracker.Image.jpg
 echo ""
 echo ""
 echo ""
 echo created topics:
-docker container inspect --format '{{.State.Status}}' kafka zookeeper uvap_mgr uvap_kafka_tracker uvap_demo_applications uvap_web_player
+docker container inspect --format '{{.State.Status}}' uvap_mgr uvap_kafka_tracker uvap_demo_applications uvap_web_player

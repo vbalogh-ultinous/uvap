@@ -47,7 +47,7 @@ jinja_yaml_param_file_path="${config_ac_dir}/params.yaml"
 trap "rm -f ${jinja_yaml_param_file_path}" TERM INT EXIT
 
 echo "ENGINES_FILE: /ultinous_app/models/engines/basic_detections.prototxt
-KAFKA_BROKER_LIST: kafka
+KAFKA_BROKER_LIST: gpumaster01
 KAFKA_TOPIC_PREFIX: ${demo_mode}
 HOST_NAME: ${host_name}
 WEB_PLAYER_PORT: ${web_player_port_number}
