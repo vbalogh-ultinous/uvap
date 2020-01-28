@@ -1,0 +1,76 @@
+engines_file: "{{ ENGINES_FILE }}"
+
+environment:
+{
+  debug_level: 2
+  profile: false
+  drop_{{ DROP }}: {}
+  kafka_broker_list: "{{ KAFKA_BROKER_LIST }}"
+  kafka_topic_prefix: "{{ KAFKA_TOPIC_PREFIX }}."
+}
+
+{% for INPUT_STREAM in INPUT_STREAMS %}
+data_run:
+{
+  input:
+  {
+    file_name: "{{ INPUT_STREAM }}"
+    keep_rate: 1
+    frame_period_ms: 125
+  }
+
+  data_flow:
+  {
+    data_node: {type: FRAME name: "input"}
+    data_node: {type: FRAME_INFO name: "frameinfo"}
+    data_node: {type: DETECTIONS name: "dets"}
+    data_node: {type: DETECTIONS name: "dets_filtered"}
+
+    process_node:
+    {
+      type: FRAME_INFO_EXTRACTOR
+      name: "frameinfocalc"
+      logging: false
+      frame_info_extractor_config:
+      {
+        input_frame: "input"
+        output_info: "frameinfo"
+      }
+    }
+
+    process_node:
+    {
+      type: OBJ_DETECTOR
+      name: "det"
+      logging: false
+      obj_det_config:
+      {
+        type: HEAD
+        input: "input"
+        bounding_boxes: "dets"
+        min_height_in_pixels: 20
+        max_height_in_pixels: 256
+        confidence_threshold: 0.1
+        image_scale_factor: 1.0
+      }
+    }
+
+    
+    process_node {
+      type: OBJ_FILTER
+      name: "det_filter"
+      obj_filter_config {
+        input_bounding_boxes: "dets"
+        output_bounding_boxes: "dets_filtered"
+        filter_detection_confidence_threshold: 0.8
+      }
+    }
+
+    # kafka output
+    process_node:{type: KAFKA_OUTPUT name: "vid_out"            kafka_output_config: {topic_name: "cam.{{loop.index - 1}}.original.Image.jpg"                      input_node: "input"}}
+    process_node:{type: KAFKA_OUTPUT name: "frameinfo_out"      kafka_output_config: {topic_name: "cam.{{loop.index - 1}}.frameinfo.FrameInfoRecord.json"        input_node: "frameinfo"}}
+    process_node:{type: KAFKA_OUTPUT name: "det_out"            kafka_output_config: {topic_name: "cam.{{loop.index - 1}}.dets.ObjectDetectionRecord.json"       input_node: "dets_filtered"}}
+
+  }
+}
+{% endfor %}
