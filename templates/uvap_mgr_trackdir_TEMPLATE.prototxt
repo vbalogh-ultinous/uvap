@@ -67,7 +67,7 @@ data_run:
     }
 
     # kafka output
-    process_node:{type: KAFKA_OUTPUT name: "vid_out"            kafka_output_config: {topic_name: "cam.{{loop.index - 1}}.original.Image.jpg"                      input_node: "input"}}
+    # process_node:{type: KAFKA_OUTPUT name: "vid_out"            kafka_output_config: {topic_name: "cam.{{loop.index - 1}}.original.Image.jpg"                      input_node: "input"}}
     process_node:{type: KAFKA_OUTPUT name: "frameinfo_out"      kafka_output_config: {topic_name: "cam.{{loop.index - 1}}.frameinfo.FrameInfoRecord.json"        input_node: "frameinfo"}}
     process_node:{type: KAFKA_OUTPUT name: "det_out"            kafka_output_config: {topic_name: "cam.{{loop.index - 1}}.dets.ObjectDetectionRecord.json"       input_node: "dets_filtered"}}
 

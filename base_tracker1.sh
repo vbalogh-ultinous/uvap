@@ -1,6 +1,8 @@
 #!/bin/sh
-DEMOMODE=${1-"base"}
+DEMOMODE=${1-"trackdir"}
+STREAM=${2-"rtsp://freddie:5109/162_original.avi"}
 echo $DEMOMODE
+echo $STREAM
 docker rm -f uvap_mgr uvap_kafka_tracker uvap_demo_applications uvap_web_player
 echo ""
 #echo ==[kafka, zookeeper]====================
@@ -24,7 +26,7 @@ echo ==[config.sh]============================
 #  --stream-uri rtsp://admin:Csirkepissok1@10.25.38.118:554/live1.sdp \
 #  --stream-uri rtsp://10.25.34.111:5010/regstream.avi \  
 #  --stream-uri /home/uvap/szeged2_split_left.avi
-"${UVAP_HOME}"/scripts/config.sh --stream-uri rtsp://freddie:5109/162_original.avi --demo-mode $DEMOMODE
+"${UVAP_HOME}"/scripts/config.sh --stream-uri $STREAM --demo-mode $DEMOMODE
 
 echo ""
 echo ==[run_mgr.sh]===========================
@@ -48,9 +50,9 @@ kafka-topics --list --zookeeper localhost
 
 
 echo ""
-echo =[run_demo.sh]===========================
-"${UVAP_HOME}"/scripts/run_demo.sh --demo-name tracker \
-  --demo-mode $DEMOMODE -- --net uvap
+#echo =[run_demo.sh]===========================
+#"${UVAP_HOME}"/scripts/run_demo.sh --demo-name tracker \
+#  --demo-mode $DEMOMODE -- --net uvap
 #/home/vbalogh/git/uvap/scripts/run_demo.sh  --demo-name tracker \
 #  --demo-mode base \
 #  --demo-applications-dir "$HOME/UVAP/dlservice/python" \
@@ -62,26 +64,26 @@ echo =[run_demo.sh]===========================
 echo ----------------------------------------- 
   
 echo ""
-echo =[run_web_player.sh]=====================  
-"${UVAP_HOME}"/scripts/run_uvap_web_player.sh -- --net uvap
-echo -----------------------------------------
-docker container inspect --format '{{.State.Status}}' uvap_web_player
-echo -----------------------------------------
+#echo =[run_web_player.sh]=====================  
+#"${UVAP_HOME}"/scripts/run_uvap_web_player.sh -- --net uvap
+#echo -----------------------------------------
+#docker container inspect --format '{{.State.Status}}' uvap_web_player
+#echo -----------------------------------------
 echo created topics:
 kafka-topics --list --zookeeper localhost
 
 echo ""
-echo ==[Setting retention time]===========================
-"${UVAP_HOME}"/scripts/set_retention.sh --retention-unit minute \
-  --retention-number 15
+#echo ==[Setting retention time]===========================
+#"${UVAP_HOME}"/scripts/set_retention.sh --retention-unit minute \
+#  --retention-number 15
  
 echo =========================================
 echo ""
 echo ""
 echo ""
-echo http://localhost:9999$DEMOMODE.cam.0.tracker.Image.jpg
+#echo http://localhost:9999$DEMOMODE.cam.0.tracker.Image.jpg
 echo ""
 echo ""
 echo ""
 echo created topics:
-docker container inspect --format '{{.State.Status}}' uvap_mgr uvap_kafka_tracker uvap_demo_applications uvap_web_player
+docker container inspect --format '{{.State.Status}}' uvap_mgr uvap_kafka_tracker #uvap_demo_applications uvap_web_player
