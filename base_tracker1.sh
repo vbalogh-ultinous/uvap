@@ -1,7 +1,7 @@
 #!/bin/sh
 DEMOMODE=${1-"base"}
 echo $DEMOMODE
-docker rm -f zookeeper uvap_mgr uvap_kafka_tracker uvap_demo_applications uvap_web_player
+docker rm -f uvap_mgr uvap_kafka_tracker uvap_demo_applications uvap_web_player
 echo ""
 #echo ==[kafka, zookeeper]====================
 docker network create uvap
